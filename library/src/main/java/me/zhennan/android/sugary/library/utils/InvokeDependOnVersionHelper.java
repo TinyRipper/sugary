@@ -5,12 +5,12 @@ import android.os.Build;
 /**
  * Created by zhangzhennan on 14/6/19.
  */
-public class InvokeHelper {
+public class InvokeDependOnVersionHelper {
 
     private boolean isInvoked = false;
 
 
-    public InvokeHelper version(int version, OnVersionInvoke invoke){
+    public InvokeDependOnVersionHelper version(int version, OnVersionInvoke invoke){
 
         if(null != invoke && !isInvoked && Build.VERSION.SDK_INT == version){
             invoke.invoke();
@@ -19,7 +19,7 @@ public class InvokeHelper {
         return this;
     }
 
-    public InvokeHelper version(Object ... versionAndInvoke){
+    public InvokeDependOnVersionHelper version(Object ... versionAndInvoke){
 
         if(null != versionAndInvoke && !isInvoked){
 
@@ -42,7 +42,7 @@ public class InvokeHelper {
         return this;
     }
 
-    public InvokeHelper versionGreaterThan(int version, OnVersionInvoke invoke){
+    public InvokeDependOnVersionHelper versionGreaterThan(int version, OnVersionInvoke invoke){
 
         if(null != invoke && !isInvoked && Build.VERSION.SDK_INT < version){
             invoke.invoke();
@@ -51,7 +51,7 @@ public class InvokeHelper {
         return this;
     }
 
-    public InvokeHelper versionLessThan(int version, OnVersionInvoke invoke){
+    public InvokeDependOnVersionHelper versionLessThan(int version, OnVersionInvoke invoke){
 
         if(null != invoke && !isInvoked && Build.VERSION.SDK_INT > version){
             invoke.invoke();
@@ -61,7 +61,7 @@ public class InvokeHelper {
         return this;
     }
 
-    public InvokeHelper otherVersion(OnVersionInvoke invoke){
+    public InvokeDependOnVersionHelper otherVersion(OnVersionInvoke invoke){
 
         if(null != invoke && !isInvoked){
             invoke.invoke();
@@ -70,20 +70,20 @@ public class InvokeHelper {
         return this;
     }
 
-    static public InvokeHelper invokeIfVersion(int version, OnVersionInvoke invoke){
+    static public InvokeDependOnVersionHelper invokeIfVersion(int version, OnVersionInvoke invoke){
 
-        return new InvokeHelper().version(version, invoke);
+        return new InvokeDependOnVersionHelper().version(version, invoke);
     }
 
-    static public InvokeHelper invokeIfVersionGreaterThan(int version, OnVersionInvoke invoke){
-        return new InvokeHelper().versionGreaterThan(version, invoke);
+    static public InvokeDependOnVersionHelper invokeIfVersionGreaterThan(int version, OnVersionInvoke invoke){
+        return new InvokeDependOnVersionHelper().versionGreaterThan(version, invoke);
     }
 
-    static public InvokeHelper invokeIfVersionLessThan(int version, OnVersionInvoke invoke){
-        return new InvokeHelper().versionLessThan(version, invoke);
+    static public InvokeDependOnVersionHelper invokeIfVersionLessThan(int version, OnVersionInvoke invoke){
+        return new InvokeDependOnVersionHelper().versionLessThan(version, invoke);
     }
 
-    static interface OnVersionInvoke{
+    static public interface OnVersionInvoke{
         void invoke();
     }
 }

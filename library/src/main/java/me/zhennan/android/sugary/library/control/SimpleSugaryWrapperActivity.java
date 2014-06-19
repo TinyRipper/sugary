@@ -2,30 +2,38 @@ package me.zhennan.android.sugary.library.control;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.List;
+
+import me.zhennan.android.sugary.library.R;
 
 /**
  * Created by zhangzhennan on 14/6/19.
  */
-public class SugaryFragment extends Fragment implements ISugaryPage {
+public class SimpleSugaryWrapperActivity extends ActionBarActivity implements ISugaryPageWrapper{
+
+    public SimpleSugaryWrapperActivity() {
+        setup(R.layout.activity_simple_wrapper);
+    }
 
     protected void setup(int layoutResId){
         this.layoutResId = layoutResId;
@@ -48,16 +56,27 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     private Integer layoutResId;
 
     /**
+     * if not use default layout, you must override this method to return custom fragmentContainerId in your layout file.
+     * @return
+     */
+    protected int getFragmentContainerId(){
+
+        if(null == layoutResId || layoutResId == R.layout.activity_simple_wrapper){
+            return R.id.sugaryPageContainer;
+        }else{
+            return 0;
+        }
+    }
+
+    /**
      * sugar method: view set onClickListener
      * #WARNING# DO NOT CALL THIS METHOD BEFORE onViewCreated CALLED
      * @param viewId view id
      * @param listener on click listener
      */
     protected void viewOnClick(int viewId, View.OnClickListener listener){
-        if(null != getView()){
-            View view = getView().findViewById(viewId);
-            viewOnClick(view, listener);
-        }
+        View view = findViewById(viewId);
+        viewOnClick(view, listener);
     }
 
     /**
@@ -79,11 +98,9 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @param listener
      */
     protected void editTextOnEnter(int editTextId, TextView.OnEditorActionListener listener){
-        if(null != getView()){
-            View view = getView().findViewById(editTextId);
-            if(view instanceof EditText){
-                editTextOnEnter((EditText)view, listener);
-            }
+        View view = findViewById(editTextId);
+        if(view instanceof EditText){
+            editTextOnEnter((EditText)view, listener);
         }
     }
 
@@ -100,11 +117,9 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @param text
      */
     protected void textViewSetText(int textViewId, String text){
-        if(null != getView()){
-            View view = getView().findViewById(textViewId);
-            if(view instanceof TextView){
-                textViewSetText((TextView)view, text);
-            }
+        View view = findViewById(textViewId);
+        if(view instanceof TextView){
+            textViewSetText((TextView)view, text);
         }
     }
 
@@ -120,7 +135,7 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @param message
      */
     protected void showPopup(String title, String message){
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .create().show();
@@ -132,7 +147,7 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     protected void showPopup(String title, String message, String okButton, DialogInterface.OnClickListener okListener, String cancelButton, DialogInterface.OnClickListener cancelListener){
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(okButton, okListener)
@@ -149,7 +164,7 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      */
     protected void showProgress(String title, String message){
         if(null == progressDialog){
-            progressDialog = new ProgressDialog(getActivity());
+            progressDialog = new ProgressDialog(this);
         }
 
         progressDialog.setTitle(title);
@@ -170,7 +185,7 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     protected void showToast(String message){
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     // -------------------------------------------------------------------------------------
@@ -181,14 +196,14 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     protected void setMenuResId(Integer menuResId){
         this.menuResId = menuResId;
 
-        setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        supportInvalidateOptionsMenu();
     }
 
     private OnPrepareOptionMenuListener onPrepareOptionMenuListener;
     private void setOnPrepareOptionMenuListener(OnPrepareOptionMenuListener onPrepareOptionMenuListener){
         this.onPrepareOptionMenuListener = onPrepareOptionMenuListener;
 
-        setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        supportInvalidateOptionsMenu();
     }
 
     private SparseArray<OnOptionMenuActionListener> menuActionListenerMap;
@@ -244,19 +259,23 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     @Override
-    final public void onPrepareOptionsMenu(Menu menu) {
+    final public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if(null != onPrepareOptionMenuListener){
-            onPrepareOptionMenuListener.onPrepareOptionMenu(getActivity().getMenuInflater(), menu);
+            onPrepareOptionMenuListener.onPrepareOptionMenu(getMenuInflater(), menu);
+            return true;
+        }else{
+            return false;
         }
     }
 
     @Override
-    final public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    final public boolean onCreateOptionsMenu(Menu menu) {
         if(null == onPrepareOptionMenuListener && null != menuResId){
-            inflater.inflate(menuResId, menu);
+            getMenuInflater().inflate(menuResId, menu);
+            return true;
         }else{
-            super.onCreateOptionsMenu(menu, inflater);
+            return super.onCreateOptionsMenu(menu);
         }
     }
 
@@ -285,58 +304,15 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     // -------------------------------------------------------------------------------------
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(null != layoutResId){
-            return inflater.inflate(layoutResId, container, false);
+            setContentView(layoutResId);
         }else{
-            return super.onCreateView(inflater, container, savedInstanceState);
+            setContentView(R.layout.activity_simple_wrapper);
         }
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     @Override
@@ -348,30 +324,13 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         this.setOnPrepareOptionMenuListener(null);
     }
 
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
-
-
-
     // ---------------------------------------------------------------
     // - ISugaryPage Interface
     // ---------------------------------------------------------------
 
     @Override
     final public ISugaryPageWrapper getWrapper() {
-
-        Fragment parent = getParentFragment();
-        Activity activity = getActivity();
-        if(null != parent && parent instanceof ISugaryPageWrapper){
-            return (ISugaryPageWrapper)parent;
-        }else if(null != activity && activity instanceof ISugaryPageWrapper){
-            return (ISugaryPageWrapper)activity;
-        }else{
-            return null;
-        }
+        return null;
     }
 
     /**
@@ -386,8 +345,21 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     @Override
     public void nextPage(Class<ISugaryPage> page, Bundle arguments) {
-        if(null != getWrapper()) {
-            getWrapper().nextPage(page, arguments);
+        int fragmentContainerId = getFragmentContainerId();
+
+        try {
+            Object instance = page.newInstance();
+            if(instance instanceof Fragment){
+                Fragment fragment = (Fragment)instance;
+                fragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(fragmentContainerId, fragment)
+                        .addToBackStack(null)
+                        .commit();
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -400,11 +372,13 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         prevPage(null);
     }
 
+    /**
+     * not implement pass Bundle back
+     * @param results
+     */
     @Override
-    public void prevPage(Bundle results) {
-        if(null != getWrapper()) {
-            getWrapper().prevPage(results);
-        }
+    final  public void prevPage(Bundle results) {
+        getSupportFragmentManager().popBackStack();
     }
 
     /**
@@ -427,22 +401,25 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     @Override
     public void firstPage(Class<ISugaryPage> page, Bundle arguments) {
-        if(null != getWrapper()) {
-            getWrapper().firstPage(page, arguments);
+        while (0 < getSupportFragmentManager().getBackStackEntryCount()){
+            getSupportFragmentManager().popBackStackImmediate();
         }
-    }
 
-    private SparseArray<OnNewPageResponse> requestCallbackMap;
-    private SparseArray<OnNewPageResponse> getRequestCallbackMap(){
-        if(null == requestCallbackMap){
-            requestCallbackMap = new SparseArray<OnNewPageResponse>();
+        int fragmentContainerId = getFragmentContainerId();
+        if(null != page){
+            try {
+                Object instance = page.newInstance();
+                if(instance instanceof Fragment){
+                    Fragment fragment = (Fragment)instance;
+                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(fragmentContainerId, fragment)
+                            .commit();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
-        return requestCallbackMap;
-    }
-
-    @Override
-    final public boolean validRequestCode(int requestCode) {
-        return -1 < getRequestCallbackMap().indexOfKey(requestCode);
     }
 
     @Override
@@ -462,7 +439,7 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         if(null != pageResponseListener){
 
             int requestCode = getRequestCallbackMap().size();
-            requestCode |= hashCode();
+            requestCode |= this.hashCode();
             requestCode &= MAXIMUM_REQUEST_CODE;
 
             getRequestCallbackMap().append(requestCode, pageResponseListener);
@@ -472,28 +449,88 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         }
     }
 
+    private SparseArray<OnNewPageResponse> requestCallbackMap;
+    private SparseArray<OnNewPageResponse> getRequestCallbackMap(){
+        if(null == requestCallbackMap){
+            requestCallbackMap = new SparseArray<OnNewPageResponse>();
+        }
+        return requestCallbackMap;
+    }
+
+    @Override
+    final public boolean validRequestCode(int requestCode) {
+        return -1 < getRequestCallbackMap().indexOfKey(requestCode);
+    }
+
+    private ISugaryPage getChildByRequestCode(int requestCode){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment instanceof ISugaryPage){
+                if(((ISugaryPage)fragment).validRequestCode(requestCode)){
+                    return (ISugaryPage)fragment;
+                }
+            }
+
+            if(fragment instanceof ISugaryPageWrapper){
+                if(((ISugaryPageWrapper)fragment).validChildRequestCode(requestCode)) {
+                    return (ISugaryPageWrapper) fragment;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean validChildRequestCode(int requestCode) {
+        return null != getChildByRequestCode(requestCode);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(validRequestCode(requestCode)){
-            OnNewPageResponse response = getRequestCallbackMap().get(requestCode);
-            switch (resultCode){
-                case Activity.RESULT_OK:
-                    response.onNewPageComplete(data.getExtras());
-                    break;
-                case Activity.RESULT_CANCELED:
-                    response.onNewPageCanceled(data.getExtras());
-                    break;
-                case Activity.RESULT_FIRST_USER:
-                    response.onNewPageFirstUser(data.getExtras());
-                    break;
-                default:
-                    response.onNewPageUnknown(data.getExtras());
-                    break;
+        final int MASK_DIGITAL = 16;
+        final int REAL_REQUEST_DIGITAL = 0xffff;
+
+        int mask = requestCode >> MASK_DIGITAL;
+        int realRequestCode = requestCode & REAL_REQUEST_DIGITAL;
+
+        // current level
+        if(0 == mask){
+
+            if(validRequestCode(realRequestCode)) {
+                OnNewPageResponse response = getRequestCallbackMap().get(realRequestCode);
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        response.onNewPageComplete(data.getExtras());
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        response.onNewPageCanceled(data.getExtras());
+                        break;
+                    case Activity.RESULT_FIRST_USER:
+                        response.onNewPageFirstUser(data.getExtras());
+                        break;
+                    default:
+                        response.onNewPageUnknown(data.getExtras());
+                        break;
+                }
+            }else{
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        }else{
+
+        }
+        // child level
+        else if(validChildRequestCode(realRequestCode)){
+
+            ISugaryPage page = getChildByRequestCode(realRequestCode);
+            if(page instanceof Fragment){
+                ((Fragment)page).onActivityResult(realRequestCode, resultCode, data);
+            }
+        }
+        // no one respond request code
+        else{
             super.onActivityResult(requestCode, resultCode, data);
         }
+
     }
 
     /**
@@ -506,19 +543,14 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     @Override
     final public void success(Bundle response) {
-        if(null != getWrapper()) {
-            getWrapper().success(response);
+        if(null != response){
+            Intent intent = new Intent();
+            intent.putExtras(response);
+            setResult(Activity.RESULT_OK, intent);
         }else{
-
-            if(null != response){
-                Intent intent = new Intent();
-                intent.putExtras(response);
-                getActivity().setResult(Activity.RESULT_OK, intent);
-            }else{
-                getActivity().setResult(Activity.RESULT_OK);
-            }
-            getActivity().finish();
+            setResult(Activity.RESULT_OK);
         }
+        finish();
     }
 
     /**
@@ -531,18 +563,14 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     @Override
     final public void cancel(Bundle response) {
-        if(null != getWrapper()) {
-            getWrapper().cancel(response);
+        if(null != response){
+            Intent intent = new Intent();
+            intent.putExtras(response);
+            setResult(Activity.RESULT_CANCELED, intent);
         }else{
-            if(null != response){
-                Intent intent = new Intent();
-                intent.putExtras(response);
-                getActivity().setResult(Activity.RESULT_CANCELED, intent);
-            }else{
-                getActivity().setResult(Activity.RESULT_CANCELED);
-            }
-            getActivity().finish();
+            setResult(Activity.RESULT_CANCELED);
         }
+        finish();
     }
 
     /**
@@ -550,18 +578,15 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      */
     @Override
     final public void close(int resultCode, Bundle response) {
-        if(null != getWrapper()) {
-            getWrapper().close(resultCode, response);
+        if(null != response){
+            Intent intent = new Intent();
+            intent.putExtras(response);
+            setResult(resultCode, intent);
         }else{
-            if(null != response){
-                Intent intent = new Intent();
-                intent.putExtras(response);
-                getActivity().setResult(resultCode, intent);
-            }else{
-                getActivity().setResult(resultCode);
-            }
-
-            getActivity().finish();
+            setResult(resultCode);
         }
+
+        finish();
     }
+
 }
