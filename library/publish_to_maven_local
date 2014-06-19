@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "input release version"
+read version
+
+if [ "x$version" = "x" ]; then
+    echo "no version input"
+    version=0.1
+fi
+
+mvn install:install-file -Dfile=`dirname $0`/build/libs/library.aar -DgroupId=me.zhennan.android.library -DartifactId=sugary -Dversion=$version -Dpackaging=aar
