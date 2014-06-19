@@ -339,27 +339,21 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void nextPage(Class<ISugaryPage> page) {
+    final public void nextPage(ISugaryPage page) {
         nextPage(page, null);
     }
 
     @Override
-    public void nextPage(Class<ISugaryPage> page, Bundle arguments) {
+    public void nextPage(ISugaryPage page, Bundle arguments) {
         int fragmentContainerId = getFragmentContainerId();
 
-        try {
-            Object instance = page.newInstance();
-            if(instance instanceof Fragment){
-                Fragment fragment = (Fragment)instance;
-                fragment.setArguments(arguments);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(fragmentContainerId, fragment)
-                        .addToBackStack(null)
-                        .commit();
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        if(null != page && page instanceof Fragment){
+            Fragment fragment = (Fragment)page;
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(fragmentContainerId, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -395,30 +389,23 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void firstPage(Class<ISugaryPage> page) {
+    final public void firstPage(ISugaryPage page) {
         firstPage(page, null);
     }
 
     @Override
-    public void firstPage(Class<ISugaryPage> page, Bundle arguments) {
+    public void firstPage(ISugaryPage page, Bundle arguments) {
         while (0 < getSupportFragmentManager().getBackStackEntryCount()){
             getSupportFragmentManager().popBackStackImmediate();
         }
 
         int fragmentContainerId = getFragmentContainerId();
-        if(null != page){
-            try {
-                Object instance = page.newInstance();
-                if(instance instanceof Fragment){
-                    Fragment fragment = (Fragment)instance;
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(fragmentContainerId, fragment)
-                            .commit();
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        if(null != page && page instanceof Fragment){
+            Fragment fragment = (Fragment)page;
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(fragmentContainerId, fragment)
+                    .commit();
         }
     }
 

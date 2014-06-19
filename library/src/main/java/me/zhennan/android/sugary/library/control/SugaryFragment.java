@@ -380,12 +380,12 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void nextPage(Class<ISugaryPage> page) {
+    final public void nextPage(ISugaryPage page) {
         nextPage(page, null);
     }
 
     @Override
-    public void nextPage(Class<ISugaryPage> page, Bundle arguments) {
+    public void nextPage(ISugaryPage page, Bundle arguments) {
         if(null != getWrapper()) {
             getWrapper().nextPage(page, arguments);
         }
@@ -421,12 +421,12 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void firstPage(Class<ISugaryPage> page) {
+    final public void firstPage(ISugaryPage page) {
         firstPage(page, null);
     }
 
     @Override
-    public void firstPage(Class<ISugaryPage> page, Bundle arguments) {
+    public void firstPage(ISugaryPage page, Bundle arguments) {
         if(null != getWrapper()) {
             getWrapper().firstPage(page, arguments);
         }
