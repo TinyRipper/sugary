@@ -17,6 +17,10 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
         setup(R.layout.page_simple_wrapper);
     }
 
+    protected int getFragmentContainerId(){
+        return R.id.sugaryPageContainer;
+    }
+
     // ---------------------------------------------------------------
     // - ISugaryPage Interface
     // ---------------------------------------------------------------
@@ -33,7 +37,7 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
     @Override
     final public void nextPage(ISugaryPage page, Bundle arguments) {
 
-        int fragmentContainerId = R.id.sugaryPageContainer;
+        int fragmentContainerId = getFragmentContainerId();
 
         try {
             if(page instanceof Fragment){
@@ -57,7 +61,7 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
             getChildFragmentManager().popBackStackImmediate();
         }
 
-        int fragmentContainerId = R.id.sugaryPageContainer;
+        int fragmentContainerId = getFragmentContainerId();
         if(null != page){
             try {
                 if(page instanceof Fragment){
