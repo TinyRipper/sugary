@@ -316,7 +316,18 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(view instanceof ViewGroup){
+            onViewCreated((ViewGroup)view, savedInstanceState);
+        }
+
     }
+
+    /**
+     * when the view is base on ViewGroup class, user can implement this method
+     * @param root
+     * @param savedInstanceState
+     */
+    protected void onViewCreated(ViewGroup root, Bundle savedInstanceState){}
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
