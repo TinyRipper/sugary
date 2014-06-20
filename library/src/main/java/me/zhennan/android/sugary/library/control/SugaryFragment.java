@@ -215,6 +215,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     private void setMenuActionListenerMap(SparseArray<OnOptionMenuActionListener> menuActionListenerMap){
         this.menuActionListenerMap = menuActionListenerMap;
+
+        setHasOptionsMenu(0 < getMenuActionListenerMap().size());
     }
 
     /**
@@ -228,6 +230,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         }else{
             unregisterMenuItemAction(menuItemId);
         }
+
+        setHasOptionsMenu(0 < getMenuActionListenerMap().size());
     }
 
     /**
@@ -251,6 +255,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      */
     protected void unregisterMenuItemAction(int menuId){
         getMenuActionListenerMap().remove(menuId);
+
+        setHasOptionsMenu(0 < getMenuActionListenerMap().size());
     }
 
     protected void unregisterMenuItemAll(){
@@ -262,6 +268,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
                 prevPage();
             }
         });
+
+        setHasOptionsMenu(0 < getMenuActionListenerMap().size());
     }
 
     @Override
