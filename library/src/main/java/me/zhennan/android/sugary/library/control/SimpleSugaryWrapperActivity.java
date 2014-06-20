@@ -317,11 +317,12 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         // destroy menu item action listener map;
         this.setMenuActionListenerMap(null);
         // destroy menu create listener;
         this.setOnPrepareOptionMenuListener(null);
+
+        super.onDestroy();
     }
 
     // ---------------------------------------------------------------
