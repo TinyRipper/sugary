@@ -372,7 +372,11 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
      */
     @Override
     final  public void prevPage(Bundle results) {
-        getSupportFragmentManager().popBackStack();
+        if(0 < getSupportFragmentManager().getBackStackEntryCount()){
+            getSupportFragmentManager().popBackStack();
+        }else{
+            cancel();
+        }
     }
 
     /**

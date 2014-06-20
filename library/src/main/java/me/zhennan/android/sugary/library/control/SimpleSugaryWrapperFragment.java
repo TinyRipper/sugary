@@ -31,7 +31,12 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
      */
     @Override
     final  public void prevPage(Bundle results) {
-        getChildFragmentManager().popBackStack();
+
+        if( 0 < getChildFragmentManager().getBackStackEntryCount()){
+            getChildFragmentManager().popBackStack();
+        }else{
+            cancel();
+        }
     }
 
     @Override

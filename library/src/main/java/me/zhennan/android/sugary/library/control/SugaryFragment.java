@@ -255,6 +255,13 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
     protected void unregisterMenuItemAll(){
         getMenuActionListenerMap().clear();
+
+        registerMenuItemAction(android.R.id.home, new OnOptionMenuActionListener() {
+            @Override
+            public void onOptionMenuAction(MenuItem menuItem) {
+                prevPage();
+            }
+        });
     }
 
     @Override
@@ -302,6 +309,14 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // register home button action
+        registerMenuItemAction(android.R.id.home, new OnOptionMenuActionListener() {
+            @Override
+            public void onOptionMenuAction(MenuItem menuItem) {
+                prevPage();
+            }
+        });
+
     }
 
     @Override
@@ -327,7 +342,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @param root
      * @param savedInstanceState
      */
-    protected void onViewCreated(ViewGroup root, Bundle savedInstanceState){}
+    protected void onViewCreated(ViewGroup root, Bundle savedInstanceState){
+    }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
