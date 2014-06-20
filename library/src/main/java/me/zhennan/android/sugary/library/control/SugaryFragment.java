@@ -120,10 +120,11 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      * @param message
      */
     protected void showPopup(String title, String message){
-        new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(message)
-                .create().show();
+                .create();
+        dialog.setCanceledOnTouchOutside(true);
     }
 
     protected void showPopup(int titleResId, int messageResId, int okButtonResId, DialogInterface.OnClickListener okListener, int cancelButtonResId, DialogInterface.OnClickListener cancelListener){
@@ -132,12 +133,15 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     protected void showPopup(String title, String message, String okButton, DialogInterface.OnClickListener okListener, String cancelButton, DialogInterface.OnClickListener cancelListener){
-        new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(okButton, okListener)
                 .setNegativeButton(cancelButton, cancelListener)
-                .create().show();
+                .create();
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     private ProgressDialog progressDialog;
@@ -169,7 +173,17 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         }
     }
 
+    protected void showToast(int messageResId){
+        showToast(getResources().getString(messageResId));
+    }
+
     protected void showToast(String message){
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void showToast(int format, Object... msg){
+        String message = getResources().getString(format);
+        message = String.format(message, msg);
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
@@ -460,7 +474,6 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
         final int MAXIMUM_REQUEST_CODE = 0xffff;
         if(null != pageResponseListener){
-
             int requestCode = getRequestCallbackMap().size();
             requestCode |= hashCode();
             requestCode &= MAXIMUM_REQUEST_CODE;
