@@ -72,6 +72,18 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         }
     }
 
+    protected ViewGroup inflateViewGroup(int layoutResId, ViewGroup parent, boolean attachToRoot){
+        return (ViewGroup)inflateView(layoutResId, parent, attachToRoot);
+    }
+
+    protected View inflateView(int layoutResId, ViewGroup parent, boolean attachToRoot){
+        if(null != getActivity()){
+            return LayoutInflater.from(getActivity()).inflate(layoutResId, parent, attachToRoot);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * sugar method: edit text set onEditorActionListener
      * #WARNING# DO NOT CALL THIS METHOD BEFORE onViewCreated CALLED
