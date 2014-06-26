@@ -3,6 +3,7 @@ package me.zhennan.android.sugary.library.control;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
 
     protected int getFragmentContainerId(){
         return R.id.sugaryPageContainer;
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        // the child fragment manager depend activity. suck!!
+        if(null != getActivity()) {
+            List<Fragment> fragments = null == getChildFragmentManager() ? null : getChildFragmentManager().getFragments();
+            if (null != fragments) {
+                for (Fragment fragment : fragments) {
+                    fragment.setMenuVisibility(menuVisible && fragment.isVisible());
+                }
+            }
+        }
     }
 
     // ---------------------------------------------------------------
