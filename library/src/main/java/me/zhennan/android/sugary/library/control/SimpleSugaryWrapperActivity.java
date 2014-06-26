@@ -493,7 +493,8 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
             if(validRequestCode(realRequestCode)) {
                 OnNewPageResponse response = getRequestCallbackMap().get(realRequestCode);
-                response.onNewPageUnknown(resultCode, data.getExtras());
+                Bundle extras = null == data? new Bundle() : data.getExtras();
+                response.onNewPageUnknown(resultCode, extras);
             }else{
                 super.onActivityResult(requestCode, resultCode, data);
             }
