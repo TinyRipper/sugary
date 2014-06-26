@@ -493,20 +493,7 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
             if(validRequestCode(realRequestCode)) {
                 OnNewPageResponse response = getRequestCallbackMap().get(realRequestCode);
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        response.onNewPageComplete(data.getExtras());
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        response.onNewPageCanceled(data.getExtras());
-                        break;
-                    case Activity.RESULT_FIRST_USER:
-                        response.onNewPageFirstUser(data.getExtras());
-                        break;
-                    default:
-                        response.onNewPageUnknown(data.getExtras());
-                        break;
-                }
+                response.onNewPageUnknown(resultCode, data.getExtras());
             }else{
                 super.onActivityResult(requestCode, resultCode, data);
             }

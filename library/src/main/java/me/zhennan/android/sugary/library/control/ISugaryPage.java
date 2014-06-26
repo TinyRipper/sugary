@@ -1,5 +1,6 @@
 package me.zhennan.android.sugary.library.control;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -63,6 +64,40 @@ public interface ISugaryPage extends Serializable{
         void onNewPageComplete(Bundle extras);
         void onNewPageCanceled(Bundle extras);
         void onNewPageFirstUser(Bundle extras);
-        void onNewPageUnknown(Bundle extras);
+        void onNewPageUnknown(int resultCode, Bundle extras);
+    }
+
+    public class NewPageResponse implements OnNewPageResponse{
+        @Override
+        public void onNewPageComplete(Bundle extras) {
+
+        }
+
+        @Override
+        public void onNewPageCanceled(Bundle extras) {
+
+        }
+
+        @Override
+        public void onNewPageFirstUser(Bundle extras) {
+
+        }
+
+        @Override
+        public void onNewPageUnknown(int resultCode, Bundle extras) {
+            switch (resultCode){
+                case Activity.RESULT_OK:
+                    onNewPageComplete(extras);
+                    break;
+
+                case Activity.RESULT_CANCELED:
+                    onNewPageCanceled(extras);
+                    break;
+
+                case Activity.RESULT_FIRST_USER:
+                    onNewPageFirstUser(extras);
+                    break;
+            }
+        }
     }
 }
