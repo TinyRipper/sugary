@@ -22,8 +22,8 @@ public interface ISugaryPage extends Serializable{
      * goto next of navigation stack
      * @param page
      */
-    public void nextPage(ISugaryPage page);
-    public void nextPage(ISugaryPage page, Bundle arguments);
+    public void nextPage(Class<? extends ISugaryPage> page);
+    public void nextPage(Class<? extends ISugaryPage> page, Bundle arguments);
 
     /**
      * goto prev of navigation stack
@@ -35,8 +35,8 @@ public interface ISugaryPage extends Serializable{
      * goto the top of navigation stack
      */
     public void firstPage();
-    public void firstPage(ISugaryPage page);
-    public void firstPage(ISugaryPage page, Bundle arguments);
+    public void firstPage(Class<? extends ISugaryPage> page);
+    public void firstPage(Class<? extends ISugaryPage> page, Bundle arguments);
 
     /**
      * create new stack under current stack

@@ -336,19 +336,20 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
     /**
      * goto next page when this fragment have ISugaryPageWrapper parent
-     * @param page
+     * @param pageClass
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void nextPage(ISugaryPage page) {
-        nextPage(page, null);
+    final public void nextPage(Class<? extends ISugaryPage> pageClass) {
+        nextPage(pageClass, null);
     }
 
     @Override
-    public void nextPage(ISugaryPage page, Bundle arguments) {
+    public void nextPage(Class<? extends ISugaryPage> pageClass, Bundle arguments) {
         int fragmentContainerId = getFragmentContainerId();
 
-        if(null != page && page instanceof Fragment){
+        ISugaryPage page = (ISugaryPage)Fragment.instantiate(this, pageClass.getName(), arguments);
+        if(null != page){
             Fragment fragment = (Fragment)page;
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -394,18 +395,19 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
      */
     @Override
-    final public void firstPage(ISugaryPage page) {
-        firstPage(page, null);
+    final public void firstPage(Class<? extends ISugaryPage> pageClass) {
+        firstPage(pageClass, null);
     }
 
     @Override
-    public void firstPage(ISugaryPage page, Bundle arguments) {
+    public void firstPage(Class<? extends ISugaryPage> pageClass, Bundle arguments) {
         while (0 < getSupportFragmentManager().getBackStackEntryCount()){
             getSupportFragmentManager().popBackStackImmediate();
         }
 
         int fragmentContainerId = getFragmentContainerId();
-        if(null != page && page instanceof Fragment){
+        ISugaryPage page = (ISugaryPage)Fragment.instantiate(this, pageClass.getName(), arguments);
+        if(null != page){
             Fragment fragment = (Fragment)page;
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

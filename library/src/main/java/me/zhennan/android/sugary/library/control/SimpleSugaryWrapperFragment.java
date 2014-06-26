@@ -40,13 +40,14 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
     }
 
     @Override
-    final public void nextPage(ISugaryPage page, Bundle arguments) {
+    final public void nextPage(Class<? extends ISugaryPage> pageClass, Bundle arguments) {
 
         int fragmentContainerId = getFragmentContainerId();
-
         try {
-            if(page instanceof Fragment){
-                Fragment fragment = (Fragment)page;
+
+            ISugaryPage page = (ISugaryPage)Fragment.instantiate(getActivity(), pageClass.getName(), arguments);
+            if(null != page){
+                Fragment fragment = ((Fragment)page);
                 fragment.setArguments(arguments);
                 getChildFragmentManager().beginTransaction()
                         .replace(fragmentContainerId, fragment)
@@ -60,13 +61,14 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
     }
 
     @Override
-    final public void firstPage(ISugaryPage page, Bundle arguments) {
+    final public void firstPage(Class<? extends ISugaryPage> pageClass, Bundle arguments) {
 
         while (0 < getChildFragmentManager().getBackStackEntryCount()){
             getChildFragmentManager().popBackStackImmediate();
         }
 
         int fragmentContainerId = getFragmentContainerId();
+        ISugaryPage page = (ISugaryPage)Fragment.instantiate(getActivity(), pageClass.getName(), arguments);
         if(null != page){
             try {
                 if(page instanceof Fragment){
