@@ -61,41 +61,41 @@ public interface ISugaryPage extends Serializable{
     public void close(int resultCode, Bundle response);
 
     public interface OnNewPageResponse{
-        void onNewPageComplete(Bundle extras);
-        void onNewPageCanceled(Bundle extras);
-        void onNewPageFirstUser(Bundle extras);
-        void onNewPageUnknown(int resultCode, Bundle extras);
+        void onNewPageComplete(Intent result);
+        void onNewPageCanceled(Intent result);
+        void onNewPageFirstUser(Intent result);
+        void onNewPageUnknown(int resultCode, Intent result);
     }
 
     public class DefaultOnNewPageResponse implements OnNewPageResponse{
         @Override
-        public void onNewPageComplete(Bundle extras) {
+        public void onNewPageComplete(Intent result) {
 
         }
 
         @Override
-        public void onNewPageCanceled(Bundle extras) {
+        public void onNewPageCanceled(Intent result) {
 
         }
 
         @Override
-        public void onNewPageFirstUser(Bundle extras) {
+        public void onNewPageFirstUser(Intent result) {
 
         }
 
         @Override
-        public void onNewPageUnknown(int resultCode, Bundle extras) {
+        public void onNewPageUnknown(int resultCode, Bundle result) {
             switch (resultCode){
                 case Activity.RESULT_OK:
-                    onNewPageComplete(extras);
+                    onNewPageComplete(result);
                     break;
 
                 case Activity.RESULT_CANCELED:
-                    onNewPageCanceled(extras);
+                    onNewPageCanceled(result);
                     break;
 
                 case Activity.RESULT_FIRST_USER:
-                    onNewPageFirstUser(extras);
+                    onNewPageFirstUser(result);
                     break;
             }
         }
