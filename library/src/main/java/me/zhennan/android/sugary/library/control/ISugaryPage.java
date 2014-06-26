@@ -67,7 +67,7 @@ public interface ISugaryPage extends Serializable{
         void onNewPageUnknown(int resultCode, Bundle extras);
     }
 
-    public class NewPageResponse implements OnNewPageResponse{
+    public class DefaultOnNewPageResponse implements OnNewPageResponse{
         @Override
         public void onNewPageComplete(Bundle extras) {
 
