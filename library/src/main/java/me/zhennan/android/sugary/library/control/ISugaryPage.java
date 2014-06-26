@@ -84,7 +84,7 @@ public interface ISugaryPage extends Serializable{
         }
 
         @Override
-        public void onNewPageUnknown(int resultCode, Bundle result) {
+        public void onNewPageUnknown(int resultCode, Intent result) {
             switch (resultCode){
                 case Activity.RESULT_OK:
                     onNewPageComplete(result);
