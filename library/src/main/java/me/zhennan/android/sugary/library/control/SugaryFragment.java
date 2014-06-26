@@ -126,6 +126,25 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
         }
     }
 
+    protected String textViewGetText(int textViewId){
+        String result = null;
+        if(null != getView()){
+            View view = getView().findViewById(textViewId);
+            if(view instanceof TextView){
+                result = ((TextView)view).getText().toString();
+            }
+        }
+        return result;
+    }
+
+    protected String textViewGetText(TextView view){
+        if(null != view){
+            return view.getText().toString();
+        }else{
+            return null;
+        }
+    }
+
     /**
      * show popup dialog to block ue flow
      * @param title
