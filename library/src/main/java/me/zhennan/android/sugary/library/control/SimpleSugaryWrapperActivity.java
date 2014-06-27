@@ -514,10 +514,6 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
     }
 
-    protected boolean onSuccess(Bundle respose){
-        return true;
-    }
-
     /**
      *  close activity with Activity.RESULT_OK result code.
      */
