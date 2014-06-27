@@ -514,6 +514,10 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
 
     }
 
+    protected boolean onSuccess(Bundle respose){
+        return true;
+    }
+
     /**
      *  close activity with Activity.RESULT_OK result code.
      */
@@ -523,7 +527,7 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     }
 
     @Override
-    final public void success(Bundle response) {
+    public void success(Bundle response) {
         if(null != response){
             Intent intent = new Intent();
             intent.putExtras(response);
@@ -543,7 +547,7 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     }
 
     @Override
-    final public void cancel(Bundle response) {
+    public void cancel(Bundle response) {
         if(null != response){
             Intent intent = new Intent();
             intent.putExtras(response);

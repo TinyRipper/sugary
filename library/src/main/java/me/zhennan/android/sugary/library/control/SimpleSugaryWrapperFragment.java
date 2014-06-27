@@ -86,13 +86,11 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
         ISugaryPage page = (ISugaryPage)Fragment.instantiate(getActivity(), pageClass.getName(), arguments);
         if(null != page){
             try {
-                if(page instanceof Fragment){
-                    Fragment fragment = (Fragment)page;
-                    fragment.setArguments(arguments);
-                    getChildFragmentManager().beginTransaction()
-                            .replace(fragmentContainerId, fragment)
-                            .commit();
-                }
+                Fragment fragment = (Fragment)page;
+                fragment.setArguments(arguments);
+                getChildFragmentManager().beginTransaction()
+                        .replace(fragmentContainerId, fragment)
+                        .commit();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -117,6 +115,8 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
         return null;
     }
 
+
+
     final public boolean validChildRequestCode(int requestCode){
         return null != getChildByRequestCode(requestCode);
     }
@@ -134,5 +134,16 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
         }
 
     }
+
+    @Override
+    public void success(Bundle response) {
+        super.success(response);
+    }
+
+    @Override
+    public void cancel(Bundle response) {
+        super.cancel(response);
+    }
+
 
 }

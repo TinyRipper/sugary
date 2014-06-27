@@ -566,12 +566,12 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      *  close activity with Activity.RESULT_OK result code.
      */
     @Override
-    final public void success() {
+    public void success() {
         success(null);
     }
 
     @Override
-    final public void success(Bundle response) {
+    public void success(Bundle response) {
         if(null != getWrapper()) {
             getWrapper().success(response);
         }else{
@@ -591,12 +591,12 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
      *  close activity with Activity.RESULT_CANCELED result code.
      */
     @Override
-    final public void cancel() {
+    public void cancel() {
         cancel(null);
     }
 
     @Override
-    final public void cancel(Bundle response) {
+    public void cancel(Bundle response) {
         if(null != getWrapper()) {
             getWrapper().cancel(response);
         }else{
