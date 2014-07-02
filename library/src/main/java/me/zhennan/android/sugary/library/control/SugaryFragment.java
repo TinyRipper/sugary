@@ -559,6 +559,8 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
         if(validRequestCode(requestCode)){
             OnNewPageResponse response = getRequestCallbackMap().get(requestCode);
+            getRequestCallbackMap().remove(requestCode);
+
             response.onNewPageUnknown(resultCode, data);
         }else{
             super.onActivityResult(requestCode, resultCode, data);
