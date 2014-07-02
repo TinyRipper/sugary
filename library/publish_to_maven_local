@@ -8,4 +8,4 @@ if [ "x$version" = "x" ]; then
     version=0.4
 fi
 
-mvn install:install-file -Dfile=`dirname $0`/build/libs/library.aar -DgroupId=me.zhennan.android.library -DartifactId=sugary -Dversion=$version -Dpackaging=aar
+mvn install:install-file -Dfile=`dirname $0`/build/outputs/aar/library.aar -DgroupId=me.zhennan.android.library -DartifactId=sugary -Dversion=$version -Dpackaging=aar

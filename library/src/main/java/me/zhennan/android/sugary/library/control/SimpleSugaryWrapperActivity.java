@@ -3,16 +3,14 @@ package me.zhennan.android.sugary.library.control;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.AttributeSet;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -196,14 +194,18 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     protected void setMenuResId(Integer menuResId){
         this.menuResId = menuResId;
 
-        supportInvalidateOptionsMenu();
+        if(null != getWindow()) {
+            supportInvalidateOptionsMenu();
+        }
     }
 
     private OnPrepareOptionMenuListener onPrepareOptionMenuListener;
     private void setOnPrepareOptionMenuListener(OnPrepareOptionMenuListener onPrepareOptionMenuListener){
         this.onPrepareOptionMenuListener = onPrepareOptionMenuListener;
 
-        supportInvalidateOptionsMenu();
+        if(null != getWindow()) {
+            supportInvalidateOptionsMenu();
+        }
     }
 
     private SparseArray<OnOptionMenuActionListener> menuActionListenerMap;
@@ -303,6 +305,23 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     // - state
     // -------------------------------------------------------------------------------------
 
+    private FragmentManager.OnBackStackChangedListener backStackChangeListener = new FragmentManager.OnBackStackChangedListener() {
+        @Override
+        public void onBackStackChanged() {
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+            if(-1 < getPrevPageArguments().indexOfKey(count)){
+                Bundle result = getPrevPageArguments().get(count);
+                getPrevPageArguments().remove(count);
+                List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                for(Fragment fragment : fragments){
+                    if(fragment instanceof ISugaryPage){
+                        ((ISugaryPage) fragment).onPageReturn(result);
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -313,6 +332,8 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
             setContentView(R.layout.activity_simple_wrapper);
         }
 
+        getSupportFragmentManager().addOnBackStackChangedListener(backStackChangeListener);
+
     }
 
     @Override
@@ -321,6 +342,8 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
         this.setMenuActionListenerMap(null);
         // destroy menu create listener;
         this.setOnPrepareOptionMenuListener(null);
+
+        getSupportFragmentManager().removeOnBackStackChangedListener(backStackChangeListener);
 
         super.onDestroy();
     }
@@ -359,6 +382,14 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
         }
     }
 
+    private SparseArray<Bundle> prevPageArguments;
+    protected SparseArray<Bundle> getPrevPageArguments(){
+        if(null == prevPageArguments){
+            prevPageArguments = new SparseArray<Bundle>();
+        }
+        return prevPageArguments;
+    }
+
     /**
      * goto prev page when this fragment have ISugaryPageWrapper parent
      * @see me.zhennan.android.sugary.library.control.ISugaryPageWrapper
@@ -374,10 +405,14 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
      */
     @Override
     final  public void prevPage(Bundle results) {
-        if(0 < getSupportFragmentManager().getBackStackEntryCount()){
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if( 0 < count){
+            getPrevPageArguments().put(count - 1, results);
             getSupportFragmentManager().popBackStack();
+        }else if(null == results){
+            pageCancel();
         }else{
-            cancel();
+            pageSuccess(results);
         }
     }
 
@@ -515,15 +550,15 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     }
 
     /**
-     *  close activity with Activity.RESULT_OK result code.
+     *  pageClose activity with Activity.RESULT_OK result code.
      */
     @Override
-    final public void success() {
-        success(null);
+    final public void pageSuccess() {
+        pageSuccess(null);
     }
 
     @Override
-    public void success(Bundle response) {
+    public void pageSuccess(Bundle response) {
         if(null != response){
             Intent intent = new Intent();
             intent.putExtras(response);
@@ -535,15 +570,15 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     }
 
     /**
-     *  close activity with Activity.RESULT_CANCELED result code.
+     *  pageClose activity with Activity.RESULT_CANCELED result code.
      */
     @Override
-    final public void cancel() {
-        cancel(null);
+    final public void pageCancel() {
+        pageCancel(null);
     }
 
     @Override
-    public void cancel(Bundle response) {
+    public void pageCancel(Bundle response) {
         if(null != response){
             Intent intent = new Intent();
             intent.putExtras(response);
@@ -555,10 +590,10 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     }
 
     /**
-     *  close activity with custom result code.
+     *  pageClose activity with custom result code.
      */
     @Override
-    final public void close(int resultCode, Bundle response) {
+    final public void pageClose(int resultCode, Bundle response) {
         if(null != response){
             Intent intent = new Intent();
             intent.putExtras(response);
@@ -570,4 +605,17 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
         finish();
     }
 
+    @Override
+    public void pageReturn(Bundle response) {
+        if(null != getWrapper()){
+            prevPage(response);
+        }else{
+            pageSuccess(response);
+        }
+    }
+
+    @Override
+    public void onPageReturn(Bundle response) {
+
+    }
 }

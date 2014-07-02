@@ -47,18 +47,21 @@ public interface ISugaryPage extends Serializable{
     public void newPage(Intent intent, OnNewPageResponse pageResponseListener);
 
     /**
-     * success
+     * pageSuccess
      */
-    public void success();
-    public void success(Bundle response);
+    public void pageSuccess();
+    public void pageSuccess(Bundle response);
 
     /**
-     * cancel
+     * pageCancel
      */
-    public void cancel();
-    public void cancel(Bundle response);
+    public void pageCancel();
+    public void pageCancel(Bundle response);
 
-    public void close(int resultCode, Bundle response);
+    public void pageReturn(Bundle response);
+    public void onPageReturn(Bundle response);
+
+    public void pageClose(int resultCode, Bundle response);
 
     public interface OnNewPageResponse{
         void onNewPageComplete(Intent result);

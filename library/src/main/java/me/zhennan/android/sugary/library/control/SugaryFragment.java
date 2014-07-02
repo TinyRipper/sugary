@@ -2,7 +2,6 @@ package me.zhennan.android.sugary.library.control;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -226,14 +225,18 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     protected void setMenuResId(Integer menuResId){
         this.menuResId = menuResId;
 
-        setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        if(null != getActivity()) {
+            setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        }
     }
 
     private OnPrepareOptionMenuListener onPrepareOptionMenuListener;
     private void setOnPrepareOptionMenuListener(OnPrepareOptionMenuListener onPrepareOptionMenuListener){
         this.onPrepareOptionMenuListener = onPrepareOptionMenuListener;
 
-        setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        if(null != getActivity()) {
+            setHasOptionsMenu(null != this.onPrepareOptionMenuListener || null != menuResId);
+        }
     }
 
     private SparseArray<OnOptionMenuActionListener> menuActionListenerMap;
@@ -563,17 +566,17 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     /**
-     *  close activity with Activity.RESULT_OK result code.
+     *  pageClose activity with Activity.RESULT_OK result code.
      */
     @Override
-    public void success() {
-        success(null);
+    public void pageSuccess() {
+        pageSuccess(null);
     }
 
     @Override
-    public void success(Bundle response) {
+    public void pageSuccess(Bundle response) {
         if(null != getWrapper()) {
-            getWrapper().success(response);
+            getWrapper().pageSuccess(response);
         }else{
 
             if(null != response){
@@ -588,17 +591,17 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     /**
-     *  close activity with Activity.RESULT_CANCELED result code.
+     *  pageClose activity with Activity.RESULT_CANCELED result code.
      */
     @Override
-    public void cancel() {
-        cancel(null);
+    public void pageCancel() {
+        pageCancel(null);
     }
 
     @Override
-    public void cancel(Bundle response) {
+    public void pageCancel(Bundle response) {
         if(null != getWrapper()) {
-            getWrapper().cancel(response);
+            getWrapper().pageCancel(response);
         }else{
             if(null != response){
                 Intent intent = new Intent();
@@ -612,12 +615,33 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     }
 
     /**
-     *  close activity with custom result code.
+     * pageReturn to prev page
+     * @param response
      */
     @Override
-    final public void close(int resultCode, Bundle response) {
+    final public void pageReturn(Bundle response){
+
+        if(null != response){
+            prevPage(response);
+        }else{
+            pageSuccess(response);
+        }
+
+
+    }
+
+    @Override
+    public void onPageReturn(Bundle response) {
+
+    }
+
+    /**
+     *  pageClose activity with custom result code.
+     */
+    @Override
+    final public void pageClose(int resultCode, Bundle response) {
         if(null != getWrapper()) {
-            getWrapper().close(resultCode, response);
+            getWrapper().pageClose(resultCode, response);
         }else{
             if(null != response){
                 Intent intent = new Intent();
