@@ -89,7 +89,9 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
 
         int count = getChildFragmentManager().getBackStackEntryCount();
         if (0 < count) {
-            getPrevPageArguments().put(count - 1, results);
+            if(null != results){
+                getPrevPageArguments().put(count - 1, results);
+            }
             getChildFragmentManager().popBackStack();
         } else if (null == results) {
             pageCancel();

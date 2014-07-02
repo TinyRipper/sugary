@@ -407,7 +407,9 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     final  public void prevPage(Bundle results) {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if( 0 < count){
-            getPrevPageArguments().put(count - 1, results);
+            if(null != results){
+                getPrevPageArguments().put(count - 1, results);
+            }
             getSupportFragmentManager().popBackStack();
         }else if(null == results){
             pageCancel();
