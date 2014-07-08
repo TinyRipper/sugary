@@ -44,21 +44,23 @@ public class InvokeDependOnVersionHelper {
 
     public InvokeDependOnVersionHelper versionGreaterThan(int version, OnVersionInvoke invoke){
 
-        if(null != invoke && !isInvoked && Build.VERSION.SDK_INT < version){
-            invoke.invoke();
-            isInvoked = true;
-        }
-        return this;
-    }
-
-    public InvokeDependOnVersionHelper versionLessThan(int version, OnVersionInvoke invoke){
-
         if(null != invoke && !isInvoked && Build.VERSION.SDK_INT > version){
             invoke.invoke();
             isInvoked = true;
         }
 
         return this;
+    }
+
+    public InvokeDependOnVersionHelper versionLessThan(int version, OnVersionInvoke invoke){
+
+        if(null != invoke && !isInvoked && Build.VERSION.SDK_INT < version){
+            invoke.invoke();
+            isInvoked = true;
+        }
+        return this;
+
+
     }
 
     public InvokeDependOnVersionHelper otherVersion(OnVersionInvoke invoke){
