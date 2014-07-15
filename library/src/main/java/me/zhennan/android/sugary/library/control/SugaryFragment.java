@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -45,6 +46,17 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
     // -------------------------------------------------------------------------------------
 
     private Integer layoutResId;
+
+    protected void viewSetVisible(int viewId, int visibility){
+        View view = getView().findViewById(viewId);
+        viewSetVisible(view, visibility);
+    }
+
+    protected void viewSetVisible(View view, int visibility){
+        if(null != view) {
+            view.setVisibility(visibility);
+        }
+    }
 
     /**
      * sugar method: view set onClickListener
@@ -655,5 +667,16 @@ public class SugaryFragment extends Fragment implements ISugaryPage {
 
             getActivity().finish();
         }
+    }
+
+    // post delay
+    public void post(Runnable action){
+        Handler handler = new Handler();
+        handler.post(action);
+    }
+
+    public void postDelayed(Runnable action, long delayMillis){
+        Handler handler = new Handler();
+        handler.postDelayed(action, delayMillis);
     }
 }

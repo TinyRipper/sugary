@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -63,6 +64,17 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
             return R.id.sugaryPageContainer;
         }else{
             return 0;
+        }
+    }
+
+    protected void viewSetVisible(int viewId, int visibility){
+        View view = findViewById(viewId);
+        viewSetVisible(view, visibility);
+    }
+
+    protected void viewSetVisible(View view, int visibility){
+        if(null != view) {
+            view.setVisibility(visibility);
         }
     }
 
@@ -621,5 +633,16 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
     @Override
     public void onPageReturn(Bundle response) {
 
+    }
+
+    // post delay
+    public void post(Runnable action){
+        Handler handler = new Handler();
+        handler.post(action);
+    }
+
+    public void postDelayed(Runnable action, long delayMillis){
+        Handler handler = new Handler();
+        handler.postDelayed(action, delayMillis);
     }
 }
