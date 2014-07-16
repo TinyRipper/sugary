@@ -113,7 +113,7 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
                 getChildFragmentManager().beginTransaction()
                         .replace(fragmentContainerId, fragment)
                         .addToBackStack(null)
-                        .commit();
+                        .commitAllowingStateLoss();
 
             }
         } catch (Exception e) {
@@ -136,7 +136,7 @@ public class SimpleSugaryWrapperFragment extends SugaryFragment implements ISuga
                 fragment.setArguments(arguments);
                 getChildFragmentManager().beginTransaction()
                         .replace(fragmentContainerId, fragment)
-                        .commit();
+                        .commitAllowingStateLoss();
             } catch (Exception e) {
                 e.printStackTrace();
             }

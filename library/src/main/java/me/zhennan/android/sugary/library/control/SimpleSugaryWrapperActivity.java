@@ -390,7 +390,7 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
             getSupportFragmentManager().beginTransaction()
                     .replace(fragmentContainerId, fragment)
                     .addToBackStack(null)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -461,7 +461,7 @@ public class SimpleSugaryWrapperActivity extends ActionBarActivity implements IS
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .replace(fragmentContainerId, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
